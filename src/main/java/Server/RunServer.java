@@ -1,6 +1,5 @@
 package Server;
 import Server.REST.RestClient;
-import models.OrderObject;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
@@ -10,7 +9,7 @@ import java.net.URL;
 
 //----------------------- ÆNDRE IKKE DENNE KLASSE, BUGGY AS HELL
 @SpringBootApplication
-public class TestServer
+public class RunServer
 {
 	public static void main(String[] args) throws Exception {
 
@@ -18,7 +17,7 @@ public class TestServer
 		RestClient RC = new RestClient();
 
 		//run Server.REST server som snakker med Tier1 klient
-		SpringApplication.run(TestServer.class, args);
+		SpringApplication.run(RunServer.class, args);
 
 		//------------------RUN SOAP CLIENT TIL TIER3, connect til relevante addresser
 		URL urlorder = new URL("http://localhost:9990/ws/addorder");
