@@ -47,9 +47,14 @@ public class RunServer
 		Service serviceorder = Service.create(urlorder, servicenameorder);
 		SOAP_Interface tstorder = serviceorder.getPort(portnameorder, SOAP_Interface.class);
 
-		for (int x = 0; x<= 8; x++){
-			//System.out.println(tstorder.sendOrder(x).getPrice());
-			RC.storeO(tstorder.sendOrder(x));
+		try {
+			for (int x = 0; tstorder.sendOrder(x) != null; x++) {
+				//System.out.println(tstorder.sendOrder(x).getPrice());
+				RC.storeO(tstorder.sendOrder(x));
+			}
+		}
+		catch (Exception e){
+			System.out.print(e);
 		}
 
 

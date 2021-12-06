@@ -143,9 +143,9 @@ public class RestController
         OrderObject ord = OrderObject.fromJson( json );
         orderlist.add(ord);
         for (int xx = 0; xx<orderlist.size(); xx++)
-        {orderlist.get(xx).setOrdernumber(orderlist.indexOf(ord));
+        {
+            orderlist.get(xx).setOrdernumber(orderlist.indexOf(ord));
             orders2chef.put( Integer.toString(ord.getOrderNumber()), ord );
-
         }
         System.out.println(orderlist.size());
 
