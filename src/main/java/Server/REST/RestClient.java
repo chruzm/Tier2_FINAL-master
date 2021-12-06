@@ -65,10 +65,24 @@ public class RestClient
         return MenuObject.fromJson( rest.getForObject( ROOT + "menu/" + itemnumber, String.class ) );
     }
 
+    //gem og modtage orders
     public void storeOrder(OrderObject s){rest.put(ROOT +"order/"+s.getOrderNumber(), s.toJson());}
+
 
     public OrderObject fetchOrder(int ordernumber )
     {
-        return OrderObject.fromJson( rest.getForObject( ROOT + "menu/" + ordernumber, String.class ) );
+        return OrderObject.fromJson( rest.getForObject( ROOT + "order/" + ordernumber, String.class ) );
     }
+
+
+
+    //modtage fra db, send til chef
+    public void storeO(OrderObject s){rest.put(ROOT +"orders/"+s.getOrderNumber(), s.toJson());}
+
+    public OrderObject fetchOItem(int ordernumber )
+    {
+        return OrderObject.fromJson( rest.getForObject( ROOT + "orders/" + ordernumber, String.class ) );
+    }
+
+
 }

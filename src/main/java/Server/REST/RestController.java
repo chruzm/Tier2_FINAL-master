@@ -11,6 +11,7 @@ import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
 import java.net.MalformedURLException;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.TreeMap;
 
 @org.springframework.web.bind.annotation.RestController
@@ -21,8 +22,11 @@ public class RestController
     private TreeMap<String, Test> friends = new TreeMap<String, Test>();
     private TreeMap<String, MenuObject> foods = new TreeMap<String, MenuObject>();
     private TreeMap<String, OrderObject> orders = new TreeMap<String, OrderObject>();
+    private TreeMap<String, OrderObject> orders2chef = new TreeMap<String, OrderObject>();
     private TreeMap<String, TestList> lists = new TreeMap<String, TestList>();
+    private static ArrayList<OrderObject> orderlist = new ArrayList<>();
     private static final String dummmmy = new MenuObject().toJson();
+    private static final String dummmmyorder = new OrderObject().toJson();
     private static final String ord = new OrderObject().toJson();
 
     /*
@@ -103,7 +107,6 @@ public class RestController
         finalOrder.setAdr(order.getAdr());
         System.out.println((finalOrder.getItems()+", pris: "+finalOrder.getPrice()+", til adresse: "+finalOrder.getAdr()));
 
-
         URL urlorder = null;
         try {
             urlorder = new URL("http://localhost:9990/ws/addorder");
@@ -118,5 +121,35 @@ public class RestController
 
         addorder.addOrder(finalOrder);
         return finalOrder;
+    }
+
+
+
+
+    @GetMapping("/orders/{number}")
+    public synchronized String getOItem( @PathVariable(value = "number") String number ){
+        OrderObject ord = orders2chef.get( number );
+
+        if( ord == null )
+            return dummmmyorder;
+        else
+            return ord.toJson();
+    }
+
+    @RequestMapping("/orders/{number}")
+    public synchronized OrderObject putOItem(@RequestBody String json, @PathVariable String number )
+    {
+
+        OrderObject ord = OrderObject.fromJson( json );
+        orderlist.add(ord);
+        for (int xx = 0; xx<orderlist.size(); xx++)
+        {orderlist.get(xx).setOrdernumber(orderlist.indexOf(ord));
+            orders2chef.put( Integer.toString(ord.getOrderNumber()), ord );
+
+        }
+        System.out.println(orderlist.size());
+
+
+        return ord;
     }
 }

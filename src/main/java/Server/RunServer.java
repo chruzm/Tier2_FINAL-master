@@ -20,7 +20,7 @@ public class RunServer
 		SpringApplication.run(RunServer.class, args);
 
 		//------------------RUN SOAP CLIENT TIL TIER3, connect til relevante addresser
-		URL urlorder = new URL("http://localhost:9990/ws/addorder");
+		URL urlorder = new URL("http://localhost:9990/ws/orders");
 		URL urlmenu = new URL("http://localhost:9990/ws/getmenu");
 
 		//1st argument service URI, refer to wsdl document above
@@ -38,12 +38,28 @@ public class RunServer
 			System.out.println(tstmenu.getMenu(x).getFood());
 			RC.storeMenu(tstmenu.getMenu(x));
 		}
+		System.out.println("---------------------------");
 
-		//portservice for addOrder til tier3, som så gemmes i database, virker
+		//port service for modtage menu fra tier3
+		QName portnameorder = new QName("http://soap/", "SendOrderImplPort");
+		QName servicenameorder = new QName("http://soap/", "SendOrderImplService");
+		//brug service
+		Service serviceorder = Service.create(urlorder, servicenameorder);
+		SOAP_Interface tstorder = serviceorder.getPort(portnameorder, SOAP_Interface.class);
+
+		for (int x = 0; x<= 8; x++){
+			//System.out.println(tstorder.sendOrder(x).getPrice());
+			RC.storeO(tstorder.sendOrder(x));
+		}
+
+
+
+
+		/*//portservice for addOrder til tier3, som så gemmes i database, virker
 		QName portnameorder = new QName("http://soap/", "AddOrderImplPort");
 		QName servicenameorder = new QName("http://soap/", "AddOrderImplService");
 		//brug service
 		Service serviceorder = Service.create(urlorder, servicenameorder);
-		SOAP_Interface addorder = serviceorder.getPort(portnameorder, SOAP_Interface.class);
+		SOAP_Interface addorder = serviceorder.getPort(portnameorder, SOAP_Interface.class);*/
 	}
 }

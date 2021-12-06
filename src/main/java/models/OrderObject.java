@@ -12,7 +12,7 @@ public class OrderObject {
     public OrderObject(){
     }
 
-    public OrderObject newOrder(int ordern, int price, String items, String adr){
+    public OrderObject newOrder(int ordernumber, int price, String items, String adr){
         OrderObject neworder = new OrderObject();
         neworder.setOrdernumber(ordernumber);
         neworder.setPrice(price);
@@ -20,9 +20,9 @@ public class OrderObject {
         neworder.setAdr(adr);
         return neworder;
     }
-    public void setOrdernumber( int ordern )
+    public void setOrdernumber( int ordernumber )
     {
-        this.ordernumber = ordern;
+        this.ordernumber = ordernumber;
     }
     public void setPrice( int price )
     {

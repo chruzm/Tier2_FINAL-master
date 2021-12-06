@@ -7,6 +7,7 @@ import models.Test;
 import javax.jws.WebMethod;
 import javax.jws.WebService;
 import javax.jws.soap.SOAPBinding;
+import java.util.ArrayList;
 
 //Service Endpoint Interface
 @WebService
@@ -27,4 +28,7 @@ public interface SOAP_Interface {
 
     @WebMethod
     OrderObject addOrder(OrderObject o);
+
+    @WebMethod
+    OrderObject sendOrder(int a);
 }
