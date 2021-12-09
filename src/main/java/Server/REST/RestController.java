@@ -1,4 +1,5 @@
 package Server.REST;
+import SOAP.NewOrder;
 import Server.SOAP_Interface;
 import models.MenuObject;
 import models.OrderObject;
@@ -98,6 +99,7 @@ public class RestController
     @RequestMapping("/order/{ordernumber}")
     public synchronized OrderObject putOrder(@RequestBody String json, @PathVariable String ordernumber )
     {
+        NewOrder newOrder = new NewOrder();
         OrderObject order = OrderObject.fromJson( json );
         orders.put( Integer.toString(order.getOrderNumber()), order );
 
@@ -107,19 +109,12 @@ public class RestController
         finalOrder.setAdr(order.getAdr());
         System.out.println((finalOrder.getItems()+", pris: "+finalOrder.getPrice()+", til adresse: "+finalOrder.getAdr()));
 
-        URL urlorder = null;
         try {
-            urlorder = new URL("http://localhost:9990/ws/addorder");
-        } catch (MalformedURLException e) {
-            e.printStackTrace();
+            newOrder.newOrder(finalOrder);
+        } catch (Exception e){
+            System.out.println(e);
         }
-        QName portnameorder = new QName("http://soap/", "AddOrderImplPort");
-        QName servicenameorder = new QName("http://soap/", "AddOrderImplService");
-        //brug service
-        Service serviceorder = Service.create(urlorder, servicenameorder);
-        SOAP_Interface addorder = serviceorder.getPort(portnameorder, SOAP_Interface.class);
 
-        addorder.addOrder(finalOrder);
         return finalOrder;
     }
 

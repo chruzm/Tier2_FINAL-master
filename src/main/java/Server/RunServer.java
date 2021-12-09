@@ -1,4 +1,5 @@
 package Server;
+import SOAP.GetMenu;
 import Server.REST.RestClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -29,19 +30,11 @@ public class RunServer
 		// port og service links kan ses i den skabte soap server adresse "http://localhost:9999/ws/tst"
 
 		//port service for modtage menu fra tier3
-		QName portnamemenu = new QName("http://soap/", "GetMenuImplPort");
-		QName servicenamemenu = new QName("http://soap/", "GetMenuImplService");
-		//brug service
-		Service servicemenu = Service.create(urlmenu, servicenamemenu);
-		SOAP_Interface tstmenu = servicemenu.getPort(portnamemenu, SOAP_Interface.class);
-		for (int x = 0; x<= 4; x++){
-			System.out.println(tstmenu.getMenu(x).getFood());
-			RC.storeMenu(tstmenu.getMenu(x));
-		}
-		System.out.println("---------------------------");
+		GetMenu getMenu = new GetMenu();
+		getMenu.getMenu();
 
 
-		//port service for modtage amount of orders fra tier3. int fra denne service bruges i loop som sender orders til chefen
+		//port service for modtage AMOUNT of orders fra tier3. int fra denne service bruges i loop som sender orders til chefen
 		QName portnamea = new QName("http://soap/", "SendAmountImplPort");
 		QName servicenamea = new QName("http://soap/", "SendAmountImplService");
 		//brug service
@@ -57,7 +50,7 @@ public class RunServer
 		Service serviceorder = Service.create(urlorder, servicenameorder);
 		SOAP_Interface tstorder = serviceorder.getPort(portnameorder, SOAP_Interface.class);
 		for (int x = 0; x<= tsta.sendAmount()-2; x++){
-			System.out.println(tstmenu.getMenu(x).getFood());
+			System.out.println();
 			RC.storeO(tstorder.sendOrder(x));
 		}
 		System.out.println("------------------");
