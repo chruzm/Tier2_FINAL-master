@@ -145,7 +145,7 @@ public class RestController
         for (int xx = 0; xx<orderlist.size(); xx++)
         {
             orderlist.get(xx).setOrdernumber(xx+1);
-            System.out.println("adressse af første order: "+ orderlist.get(0).getAdr()+ ", o number af a: "+orderlist.get(0).getOrderNumber());
+            System.out.println("adressse af order: "+ orderlist.get(xx).getAdr()+ ", o number af a: "+orderlist.get(xx).getOrderNumber());
             orders2chef.put( Integer.toString(ord.getOrderNumber()), ord );
         }
 

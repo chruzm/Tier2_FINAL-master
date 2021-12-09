@@ -51,6 +51,8 @@ public class RunServer
 			System.out.println(tstmenu.getMenu(x).getFood());
 			RC.storeO(tstorder.sendOrder(x));
 		}
+		System.out.println("------------------");
+		System.out.println(tstorder.sendOrder(5).getAdr());
 
 
 
