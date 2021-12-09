@@ -53,6 +53,7 @@ public class RunServer
 		}
 		System.out.println("------------------");
 		System.out.println(tstorder.sendOrder(5).getAdr());
+		RC.storeO(tstorder.sendOrder(5));
 
 
 
