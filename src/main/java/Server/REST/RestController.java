@@ -24,7 +24,7 @@ public class RestController
     private TreeMap<String, OrderObject> orders = new TreeMap<String, OrderObject>();
     private TreeMap<String, OrderObject> orders2chef = new TreeMap<String, OrderObject>();
     private TreeMap<String, TestList> lists = new TreeMap<String, TestList>();
-    private static ArrayList<OrderObject> orderlist = new ArrayList<>();
+    private static final ArrayList<OrderObject> orderlist = new ArrayList<>();
     private static final String dummmmy = new MenuObject().toJson();
     private static final String dummmmyorder = new OrderObject().toJson();
     private static final String ord = new OrderObject().toJson();
@@ -144,12 +144,12 @@ public class RestController
         orderlist.add(ord);
         for (int xx = 0; xx<orderlist.size(); xx++)
         {
-            orderlist.get(xx).setOrdernumber(orderlist.indexOf(ord));
+            orderlist.get(xx).setOrdernumber(xx+1);
+            System.out.println("adressse af første order: "+ orderlist.get(0).getAdr()+ ", o number af a: "+orderlist.get(0).getOrderNumber());
             orders2chef.put( Integer.toString(ord.getOrderNumber()), ord );
         }
+
         System.out.println(orderlist.size());
-
-
         return ord;
     }
 }

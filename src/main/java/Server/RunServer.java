@@ -40,21 +40,16 @@ public class RunServer
 		}
 		System.out.println("---------------------------");
 
-		//port service for modtage menu fra tier3
+		//port service for modtage orders fra tier3 som sendes til chefen
 		QName portnameorder = new QName("http://soap/", "SendOrderImplPort");
 		QName servicenameorder = new QName("http://soap/", "SendOrderImplService");
 		//brug service
 		Service serviceorder = Service.create(urlorder, servicenameorder);
 		SOAP_Interface tstorder = serviceorder.getPort(portnameorder, SOAP_Interface.class);
 
-		try {
-			for (int x = 0; tstorder.sendOrder(x) != null; x++) {
-				//System.out.println(tstorder.sendOrder(x).getPrice());
-				RC.storeO(tstorder.sendOrder(x));
-			}
-		}
-		catch (Exception e){
-			System.out.print(e);
+		for (int x = 0; x<= 4; x++){
+			System.out.println(tstmenu.getMenu(x).getFood());
+			RC.storeO(tstorder.sendOrder(x));
 		}
 
 
