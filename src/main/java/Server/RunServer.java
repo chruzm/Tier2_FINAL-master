@@ -22,6 +22,7 @@ public class RunServer
 		//------------------RUN SOAP CLIENT TIL TIER3, connect til relevante addresser
 		URL urlorder = new URL("http://localhost:9990/ws/orders");
 		URL urlmenu = new URL("http://localhost:9990/ws/getmenu");
+		URL urla = new URL("http://localhost:9990/ws/amount");
 
 		//1st argument service URI, refer to wsdl document above
 		//2nd argument is service name, refer to wsdl document above
@@ -33,12 +34,21 @@ public class RunServer
 		//brug service
 		Service servicemenu = Service.create(urlmenu, servicenamemenu);
 		SOAP_Interface tstmenu = servicemenu.getPort(portnamemenu, SOAP_Interface.class);
-
 		for (int x = 0; x<= 4; x++){
 			System.out.println(tstmenu.getMenu(x).getFood());
 			RC.storeMenu(tstmenu.getMenu(x));
 		}
 		System.out.println("---------------------------");
+
+
+		//port service for modtage amount of orders fra tier3. int fra denne service bruges i loop som sender orders til chefen
+		QName portnamea = new QName("http://soap/", "SendAmountImplPort");
+		QName servicenamea = new QName("http://soap/", "SendAmountImplService");
+		//brug service
+		Service servicea = Service.create(urla, servicenamea);
+		SOAP_Interface tsta = servicea.getPort(portnamea, SOAP_Interface.class);
+		System.out.println("size of list to chef: "+tsta.sendAmount());
+
 
 		//port service for modtage orders fra tier3 som sendes til chefen
 		QName portnameorder = new QName("http://soap/", "SendOrderImplPort");
@@ -46,15 +56,13 @@ public class RunServer
 		//brug service
 		Service serviceorder = Service.create(urlorder, servicenameorder);
 		SOAP_Interface tstorder = serviceorder.getPort(portnameorder, SOAP_Interface.class);
-
-		for (int x = 0; x<= 4; x++){
+		for (int x = 0; x<= tsta.sendAmount()-2; x++){
 			System.out.println(tstmenu.getMenu(x).getFood());
 			RC.storeO(tstorder.sendOrder(x));
 		}
 		System.out.println("------------------");
-		System.out.println(tstorder.sendOrder(5).getAdr());
-		RC.storeO(tstorder.sendOrder(5));
-
+		System.out.println(tstorder.sendOrder(tsta.sendAmount()-1).getAdr());
+		RC.storeO(tstorder.sendOrder(tsta.sendAmount()-1));
 
 
 

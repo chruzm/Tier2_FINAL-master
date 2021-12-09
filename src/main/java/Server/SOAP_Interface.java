@@ -31,4 +31,7 @@ public interface SOAP_Interface {
 
     @WebMethod
     OrderObject sendOrder(int a);
+
+    @WebMethod
+    int sendAmount();
 }
