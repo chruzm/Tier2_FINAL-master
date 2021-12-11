@@ -5,6 +5,7 @@ import models.MenuObject;
 import models.OrderObject;
 import org.springframework.web.bind.annotation.*;
 
+import java.net.MalformedURLException;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -88,8 +89,7 @@ public class RestController
     }
 
     @RequestMapping("/order/{ordernumber}")
-    public synchronized OrderObject putOrder(@RequestBody String json, @PathVariable String ordernumber )
-    {
+    public synchronized OrderObject putOrder(@RequestBody String json, @PathVariable String ordernumber ) throws MalformedURLException, InterruptedException {
         Orders2Chef o2c = new Orders2Chef();
         NewOrder newOrder = new NewOrder();
         OrderObject order = OrderObject.fromJson( json );
@@ -101,6 +101,7 @@ public class RestController
         finalOrder.setAdr(order.getAdr());
         System.out.println((finalOrder.getItems()+", pris: "+finalOrder.getPrice()+", til adresse: "+finalOrder.getAdr()));
 
+        newOrder.newOrder(finalOrder);
 
         return finalOrder;
     }

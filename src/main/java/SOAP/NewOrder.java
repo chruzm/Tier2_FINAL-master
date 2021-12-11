@@ -33,19 +33,5 @@ public class NewOrder {
 		SOAP_Interface addorder = serviceorder.getPort(portnameorder, SOAP_Interface.class);
 
         addorder.addOrder(ord);
-
-
-        Thread t1 = new Thread(new Runnable() {
-            public void run()
-            {
-                try {
-                    o2c.send2Chef();
-                } catch (Exception e){
-                    System.out.println(e);
-                }
-            }});
-        t1.start();
-        t1.join();
-
     }
 }
