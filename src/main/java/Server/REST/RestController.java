@@ -96,10 +96,13 @@ public class RestController
         orders.put( Integer.toString(order.getOrderNumber()), order );
 
         OrderObject finalOrder = new OrderObject();
+        finalOrder.setOrdernumber(order.getOrderNumber());
         finalOrder.setItems(order.getItems());
         finalOrder.setPrice(order.getPrice());
         finalOrder.setAdr(order.getAdr());
-        System.out.println((finalOrder.getItems()+", pris: "+finalOrder.getPrice()+", til adresse: "+finalOrder.getAdr()));
+        finalOrder.setEmail(order.getEmail());
+        finalOrder.setPhone(order.getPhone());
+        System.out.println(("#"+finalOrder.getOrderNumber()+"//phone number: "+finalOrder.getPhone()));
 
         newOrder.newOrder(finalOrder);
 
@@ -109,6 +112,7 @@ public class RestController
 
 
 
+    //metoder til chefen
     @GetMapping("/orders/{number}")
     public synchronized String getOItem( @PathVariable(value = "number") String number ){
         OrderObject ord = orders2chef.get( number );
