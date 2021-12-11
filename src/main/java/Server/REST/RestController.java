@@ -1,17 +1,10 @@
 package Server.REST;
 import SOAP.NewOrder;
-import Server.SOAP_Interface;
+import SOAP.Orders2Chef;
 import models.MenuObject;
 import models.OrderObject;
-import models.Test;
-import models.TestList;
-import org.springframework.core.annotation.Order;
 import org.springframework.web.bind.annotation.*;
 
-import javax.xml.namespace.QName;
-import javax.xml.ws.Service;
-import java.net.MalformedURLException;
-import java.net.URL;
 import java.util.ArrayList;
 import java.util.TreeMap;
 
@@ -20,11 +13,9 @@ public class RestController
 {
     private RestClient RC = new RestClient();
     private static String x,y;
-    private TreeMap<String, Test> friends = new TreeMap<String, Test>();
     private TreeMap<String, MenuObject> foods = new TreeMap<String, MenuObject>();
     private TreeMap<String, OrderObject> orders = new TreeMap<String, OrderObject>();
     private TreeMap<String, OrderObject> orders2chef = new TreeMap<String, OrderObject>();
-    private TreeMap<String, TestList> lists = new TreeMap<String, TestList>();
     private static final ArrayList<OrderObject> orderlist = new ArrayList<>();
     private static final String dummmmy = new MenuObject().toJson();
     private static final String dummmmyorder = new OrderObject().toJson();
@@ -99,6 +90,7 @@ public class RestController
     @RequestMapping("/order/{ordernumber}")
     public synchronized OrderObject putOrder(@RequestBody String json, @PathVariable String ordernumber )
     {
+        Orders2Chef o2c = new Orders2Chef();
         NewOrder newOrder = new NewOrder();
         OrderObject order = OrderObject.fromJson( json );
         orders.put( Integer.toString(order.getOrderNumber()), order );
@@ -109,11 +101,6 @@ public class RestController
         finalOrder.setAdr(order.getAdr());
         System.out.println((finalOrder.getItems()+", pris: "+finalOrder.getPrice()+", til adresse: "+finalOrder.getAdr()));
 
-        try {
-            newOrder.newOrder(finalOrder);
-        } catch (Exception e){
-            System.out.println(e);
-        }
 
         return finalOrder;
     }
@@ -143,7 +130,6 @@ public class RestController
             System.out.println("adressse af order: "+ orderlist.get(xx).getAdr()+ ", o number af a: "+orderlist.get(xx).getOrderNumber());
             orders2chef.put( Integer.toString(ord.getOrderNumber()), ord );
         }
-
         System.out.println(orderlist.size());
         return ord;
     }

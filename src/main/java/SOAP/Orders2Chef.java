@@ -1,7 +1,6 @@
 package SOAP;
 
 import Server.REST.RestClient;
-import Server.SOAP_Interface;
 
 import javax.xml.namespace.QName;
 import javax.xml.ws.Service;
@@ -10,7 +9,7 @@ import java.net.URL;
 
 public class Orders2Chef {
 
-    public void send2Chef() throws MalformedURLException {
+    public synchronized void send2Chef() throws MalformedURLException {
         /*
          1st argument service URI, refer to wsdl document above
         2nd argument is service name, refer to wsdl document above

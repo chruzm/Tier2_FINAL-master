@@ -15,6 +15,7 @@ public class RunServer
 {
 	public static void main(String[] args) throws Exception {
 
+
 		//rest client til at sende data modtaget fra tier3 til tier2 api
 		RestClient RC = new RestClient();
 		//run Server.REST server som snakker med Tier1 klient
