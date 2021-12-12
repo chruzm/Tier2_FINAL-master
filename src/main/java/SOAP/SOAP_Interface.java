@@ -2,6 +2,7 @@ package SOAP;
 
 import models.MenuObject;
 import models.OrderObject;
+import models.ReviewObject;
 
 import javax.jws.WebMethod;
 import javax.jws.WebService;
@@ -24,4 +25,10 @@ public interface SOAP_Interface {
 
     @WebMethod
     int sendAmount();
+
+    @WebMethod
+    ReviewObject sendReview(int a);
+
+    @WebMethod
+    ReviewObject addReview(ReviewObject r);
 }

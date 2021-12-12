@@ -3,6 +3,7 @@ package Server.REST;
 import com.google.gson.Gson;
 import models.MenuObject;
 import models.OrderObject;
+import models.ReviewObject;
 import org.springframework.web.client.RestTemplate;
 
 
@@ -56,7 +57,6 @@ public class RestClient
     }
 
 
-
     //modtage fra db, send til chef
     public synchronized void storeO(OrderObject s){rest.put(ROOT +"orders/"+s.getOrderNumber(), s.toJson());}
 
@@ -64,6 +64,24 @@ public class RestClient
     {
         return OrderObject.fromJson( rest.getForObject( ROOT + "orders/" + ordernumber, String.class ) );
     }
+
+    //modtage fra klient, send til database
+    public synchronized void storeR(ReviewObject s){rest.put(ROOT +"r/"+s.getId(), s.toJson());}
+    public ReviewObject fetchReview(int id )
+    {
+        return ReviewObject.fromJson( rest.getForObject( ROOT + "r/" + id, String.class ) );
+    }
+
+
+
+    //modtage fra database, send til klient
+    public synchronized void storeRevRev(ReviewObject s){rest.put(ROOT +"review/"+s.getId(), s.toJson());}
+
+    public ReviewObject fetchRevRev(int id )
+    {
+        return ReviewObject.fromJson( rest.getForObject( ROOT + "review/" + id, String.class ) );
+    }
+
 
 
 }

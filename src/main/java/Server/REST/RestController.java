@@ -1,8 +1,11 @@
 package Server.REST;
 import SOAP.NewOrder;
+import SOAP.NewReview;
 import SOAP.Orders2Chef;
 import models.MenuObject;
 import models.OrderObject;
+import models.ReviewObject;
+import org.apache.catalina.valves.rewrite.RewriteCond;
 import org.springframework.web.bind.annotation.*;
 
 import java.net.MalformedURLException;
@@ -17,45 +20,14 @@ public class RestController
     private TreeMap<String, MenuObject> foods = new TreeMap<String, MenuObject>();
     private TreeMap<String, OrderObject> orders = new TreeMap<String, OrderObject>();
     private TreeMap<String, OrderObject> orders2chef = new TreeMap<String, OrderObject>();
+    private TreeMap<String, ReviewObject> reviews = new TreeMap<String, ReviewObject>();
     private static final ArrayList<OrderObject> orderlist = new ArrayList<>();
+    private static final ArrayList<ReviewObject> reviewList = new ArrayList<>();
+    private TreeMap<String, ReviewObject> rew2chef = new TreeMap<String, ReviewObject>();
     private static final String dummmmy = new MenuObject().toJson();
     private static final String dummmmyorder = new OrderObject().toJson();
+    private static final String dummmmyrew = new ReviewObject().toJson();
     private static final String ord = new OrderObject().toJson();
-
-    /*
-    /////*****************************************TESTS
-    @GetMapping("/friend/{phoneNo}")
-    public synchronized String getFriend( @PathVariable(value = "phoneNo") String phoneNo )
-    {
-        Test f = friends.get( phoneNo );
-
-        if( f == null )
-            return dummy;
-        else
-            return f.toJson();
-    }
-
-    @RequestMapping("/friend/{phoneNo}")
-    public synchronized Test putFriend(@RequestBody String json, @PathVariable String phoneNo )
-    {
-        Test f = Test.fromJson( json );
-        friends.put( f.getPhoneNo(), f );
-
-        return f;
-    }
-
-    @GetMapping("/lists/{listnumber}")
-    public synchronized String getList( @PathVariable(value = "listnumber") String listnumber )
-    {
-        TestList t = lists.get( listnumber );
-
-        if( t == null )
-            return dummmy;
-        else
-            return t.toJson();
-    }
-    //********************************************TESTS
-     */
 
 
     @GetMapping("/menu/{number}")
@@ -78,6 +50,7 @@ public class RestController
         return food;
     }
 
+    //metoder for kunden som laver ny bestilling
     @GetMapping("/order/{ordernumber}")
     public synchronized String getOrder( @PathVariable(value = "ordernumber") String ordernumber ){
         OrderObject order = orders.get( ordernumber );
@@ -94,6 +67,7 @@ public class RestController
         NewOrder newOrder = new NewOrder();
         OrderObject order = OrderObject.fromJson( json );
         orders.put( Integer.toString(order.getOrderNumber()), order );
+        System.out.println("ordernumber bestilt af kunde: "+order.getOrderNumber());
 
         OrderObject finalOrder = new OrderObject();
         finalOrder.setOrdernumber(order.getOrderNumber());
@@ -108,8 +82,6 @@ public class RestController
 
         return finalOrder;
     }
-
-
 
 
     //metoder til chefen
@@ -137,5 +109,64 @@ public class RestController
         }
         System.out.println(orderlist.size());
         return ord;
+    }
+
+    //metoder til klienten, modtag review fra klient, send til database
+    @GetMapping("/r/{number}")
+    public synchronized String getReview( @PathVariable(value = "number") String number ){
+        ReviewObject rew = rew2chef.get( number );
+
+        if( rew == null )
+            return dummmmy;
+        else
+            return rew.toJson();
+    }
+
+    @RequestMapping("/r/{number}")
+    public synchronized ReviewObject putReview(@RequestBody String json, @PathVariable String number ) throws MalformedURLException, InterruptedException {
+        ReviewObject review = new ReviewObject();
+        NewReview newReview = new NewReview();
+        ReviewObject revob = ReviewObject.fromJson( json );
+        reviews.put( Integer.toString(revob.getId()), revob );
+        System.out.println("review indsendt af kunde: "+revob.getId());
+
+        review.setId(revob.getId());
+        review.setName(revob.getName());
+        review.setReview(revob.getReview());
+        System.out.println(("#"+review.getId()+"//phone number: "+review.getName()));
+
+        newReview.newReview(review);
+
+        return review;
+    }
+
+
+
+    //metoder til klienten, modtage reviews fra dataabase, send til klient
+    @GetMapping("/review/{number}")
+    public synchronized String getMSavedRevs( @PathVariable(value = "number") String number ){
+        ReviewObject rev = reviews.get( number );
+
+        if( rev == null )
+            return dummmmyrew;
+        else
+            return rev.toJson();
+    }
+
+    @RequestMapping("/review/{number}")
+    public synchronized ReviewObject putSavedRevs(@RequestBody String json, @PathVariable String number )
+    {
+
+        ReviewObject rev = ReviewObject.fromJson( json );
+        reviewList.add(rev);
+        for (int xx = 0; xx<reviewList.size(); xx++)
+        {
+            reviewList.get(xx).setId(xx+1);
+            System.out.println("id af review: "+ reviewList.get(xx).getId()+reviewList.get(xx).getName()
+            +"///////"+reviewList.get(xx).getReview());
+            rew2chef.put( Integer.toString(rev.getId()), rev );
+        }
+        System.out.println(reviewList.size());
+        return rev;
     }
 }

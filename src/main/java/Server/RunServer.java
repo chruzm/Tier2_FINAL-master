@@ -1,6 +1,7 @@
 package Server;
 import SOAP.GetMenu;
 import SOAP.Orders2Chef;
+import SOAP.Reviews2Client;
 import Server.REST.RestClient;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -21,9 +22,6 @@ public class RunServer
 		//run Server.REST server som snakker med Tier1 klient
 		SpringApplication.run(RunServer.class, args);
 		//------------------RUN SOAP CLIENT TIL TIER3, connect til relevante addresser
-		URL urlorder = new URL("http://localhost:9990/ws/orders");
-		URL urlmenu = new URL("http://localhost:9990/ws/getmenu");
-		URL urla = new URL("http://localhost:9990/ws/amount");
 		//port service for modtage menu fra tier3
 		GetMenu getMenu = new GetMenu();
 		getMenu.getMenu();
@@ -34,6 +32,11 @@ public class RunServer
 		 */
 		Orders2Chef o2c = new Orders2Chef();
 		o2c.send2Chef();
+
+
+		//send reviews til kunde
+		Reviews2Client r2 = new Reviews2Client();
+		r2.Reviews2Client();
 
 	}
 }
