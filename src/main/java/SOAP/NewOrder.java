@@ -34,6 +34,5 @@ public class NewOrder {
 
 
         addorder.addOrder(ord);
-        RC.storeO(ord);
     }
 }

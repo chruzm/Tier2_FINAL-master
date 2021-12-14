@@ -78,7 +78,7 @@ public class RestController
         finalOrder.setPhone(order.getPhone());
         System.out.println(("#"+finalOrder.getOrderNumber()+"//phone number: "+finalOrder.getPhone()));
 
-        //newOrder.newOrder(finalOrder);
+        newOrder.newOrder(finalOrder);
 
 
         return finalOrder;
