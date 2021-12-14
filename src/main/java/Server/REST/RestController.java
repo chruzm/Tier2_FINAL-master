@@ -21,9 +21,10 @@ public class RestController
     private TreeMap<String, OrderObject> orders = new TreeMap<String, OrderObject>();
     private TreeMap<String, OrderObject> orders2chef = new TreeMap<String, OrderObject>();
     private TreeMap<String, ReviewObject> reviews = new TreeMap<String, ReviewObject>();
+    private TreeMap<String, ReviewObject> rew2chef = new TreeMap<String, ReviewObject>();
     private static final ArrayList<OrderObject> orderlist = new ArrayList<>();
     private static final ArrayList<ReviewObject> reviewList = new ArrayList<>();
-    private TreeMap<String, ReviewObject> rew2chef = new TreeMap<String, ReviewObject>();
+
     private static final String dummmmy = new MenuObject().toJson();
     private static final String dummmmyorder = new OrderObject().toJson();
     private static final String dummmmyrew = new ReviewObject().toJson();
@@ -63,7 +64,6 @@ public class RestController
 
     @RequestMapping("/order/{ordernumber}")
     public synchronized OrderObject putOrder(@RequestBody String json, @PathVariable String ordernumber ) throws MalformedURLException, InterruptedException {
-        Orders2Chef o2c = new Orders2Chef();
         NewOrder newOrder = new NewOrder();
         OrderObject order = OrderObject.fromJson( json );
         orders.put( Integer.toString(order.getOrderNumber()), order );
@@ -78,7 +78,8 @@ public class RestController
         finalOrder.setPhone(order.getPhone());
         System.out.println(("#"+finalOrder.getOrderNumber()+"//phone number: "+finalOrder.getPhone()));
 
-        newOrder.newOrder(finalOrder);
+        //newOrder.newOrder(finalOrder);
+
 
         return finalOrder;
     }
@@ -99,15 +100,17 @@ public class RestController
     public synchronized OrderObject putOItem(@RequestBody String json, @PathVariable String number )
     {
 
+        RestClient rc = new RestClient();
         OrderObject ord = OrderObject.fromJson( json );
         orderlist.add(ord);
         for (int xx = 0; xx<orderlist.size(); xx++)
         {
             orderlist.get(xx).setOrdernumber(xx+1);
-            System.out.println("adressse af order: "+ orderlist.get(xx).getAdr()+ ", o number af a: "+orderlist.get(xx).getOrderNumber());
+            System.out.println("adressse af order: "+ orderlist.get(xx).getAdr()+ ", o number af bestilling: "+orderlist.get(xx).getOrderNumber());
             orders2chef.put( Integer.toString(ord.getOrderNumber()), ord );
         }
         System.out.println(orderlist.size());
+
         return ord;
     }
 
@@ -142,10 +145,12 @@ public class RestController
 
 
 
+
+
     //metoder til klienten, modtage reviews fra dataabase, send til klient
-    @GetMapping("/review/{number}")
-    public synchronized String getMSavedRevs( @PathVariable(value = "number") String number ){
-        ReviewObject rev = reviews.get( number );
+    @GetMapping("/review/{id}")
+    public synchronized String getMSavedRevs( @PathVariable(value = "id") String id ){
+        ReviewObject rev = reviews.get( id );
 
         if( rev == null )
             return dummmmyrew;
@@ -153,20 +158,18 @@ public class RestController
             return rev.toJson();
     }
 
-    @RequestMapping("/review/{number}")
-    public synchronized ReviewObject putSavedRevs(@RequestBody String json, @PathVariable String number )
+    @RequestMapping("/review/{id}")
+    public synchronized ReviewObject putSavedRevs(@RequestBody String json, @PathVariable int id )
     {
-
-        ReviewObject rev = ReviewObject.fromJson( json );
-        reviewList.add(rev);
+        ReviewObject reviewObject = ReviewObject.fromJson( json );
+        reviewList.add(reviewObject);
         for (int xx = 0; xx<reviewList.size(); xx++)
         {
-            reviewList.get(xx).setId(xx+1);
-            System.out.println("id af review: "+ reviewList.get(xx).getId()+reviewList.get(xx).getName()
-            +"///////"+reviewList.get(xx).getReview());
-            rew2chef.put( Integer.toString(rev.getId()), rev );
-        }
-        System.out.println(reviewList.size());
-        return rev;
+            //reviewList.get(xx).setOrdernumber(xx+1);
+            System.out.println("review: "+ reviewList.get(xx).getReview()+reviewList.get(xx).getId());
+
+        }rew2chef.put( Integer.toString(reviewObject.getId()), reviewObject );
+        System.out.println(orderlist.size());
+        return reviewObject;
     }
 }

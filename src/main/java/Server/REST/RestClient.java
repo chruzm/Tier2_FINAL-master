@@ -74,14 +74,15 @@ public class RestClient
 
 
 
-    //modtage fra database, send til klient
-    public synchronized void storeRevRev(ReviewObject s){rest.put(ROOT +"review/"+s.getId(), s.toJson());}
 
-    public ReviewObject fetchRevRev(int id )
+
+    //modtage fra db, send til klient
+    public synchronized void send2Client(ReviewObject rev){rest.put(ROOT +"review/"+rev.getId(), rev.toJson());}
+
+    public ReviewObject fetch(int id )
     {
-        return ReviewObject.fromJson( rest.getForObject( ROOT + "review/" + id, String.class ) );
+        return ReviewObject.fromJson( rest.getForObject( ROOT + "review/" +id  , String.class ) );
     }
-
 
 
 }

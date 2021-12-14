@@ -32,6 +32,8 @@ public class NewOrder {
 		Service serviceorder = Service.create(urlorder, servicenameorder);
 		SOAP_Interface addorder = serviceorder.getPort(portnameorder, SOAP_Interface.class);
 
+
         addorder.addOrder(ord);
+        RC.storeO(ord);
     }
 }

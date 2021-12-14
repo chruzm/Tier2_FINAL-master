@@ -30,8 +30,7 @@ public class Reviews2Client {
         Service service = Service.create(urlr, servicename);
         SOAP_Interface tst = service.getPort(portname, SOAP_Interface.class);
         for (int x = 0; x<= 3; x++){
-            System.out.println(tst);
-            RC.storeRevRev(tst.sendReview(x));
+            RC.send2Client(tst.sendReview(x));
         }
     }
 }
